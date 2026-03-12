@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Go 1.22+
+- Go compiler
 - Windows build target (`GOOS=windows`)
 - Build with `-ldflags="-H windowsgui"` to suppress the console window
 

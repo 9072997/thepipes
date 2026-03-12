@@ -1,12 +1,12 @@
 module github.com/9072997/thepipes
 
-go 1.25.0
+go 1.26.1
 
 require (
 	github.com/d5/tengo/v2 v2.17.0
 	github.com/go-ole/go-ole v1.3.0
 	github.com/mholt/acmez/v3 v3.1.6
-	golang.org/x/sys v0.41.0
+	golang.org/x/sys v0.42.0
 	modernc.org/tk9.0 v1.74.3
 )
 
@@ -20,11 +20,11 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	golang.org/x/crypto v0.48.0 // indirect
+	golang.org/x/crypto v0.49.0 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
-	golang.org/x/image v0.36.0 // indirect
-	golang.org/x/net v0.50.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
+	golang.org/x/image v0.37.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 	modernc.org/fileutil v1.4.0 // indirect
 	modernc.org/fsm v1.3.2 // indirect
 	modernc.org/gc/v3 v3.1.2 // indirect
@@ -35,12 +35,12 @@ require (
 	modernc.org/libXft v0.10.47 // indirect
 	modernc.org/libXrender v0.9.26 // indirect
 	modernc.org/libbsd v0.11.17 // indirect
-	modernc.org/libc v1.68.0 // indirect
+	modernc.org/libc v1.70.0 // indirect
 	modernc.org/libexpat v0.10.26 // indirect
 	modernc.org/libfontconfig v0.8.16 // indirect
 	modernc.org/libfreetype v0.9.28 // indirect
 	modernc.org/libmd v0.12.29 // indirect
-	modernc.org/libtcl9.0 v0.17.3 // indirect
+	modernc.org/libtcl9.0 v0.17.4 // indirect
 	modernc.org/libtk9.0 v0.17.4 // indirect
 	modernc.org/libxcb v0.12.8 // indirect
 	modernc.org/libz v0.17.3 // indirect
