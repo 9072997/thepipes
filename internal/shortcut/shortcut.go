@@ -5,6 +5,7 @@ package shortcut
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/go-ole/go-ole"
@@ -31,6 +32,11 @@ func CreateAll(shortcuts map[string]string, vars map[string]string) error {
 		}
 
 		isURL := strings.HasPrefix(target, "http://") || strings.HasPrefix(target, "https://")
+
+		// Resolve relative paths against the install directory
+		if !isURL && !filepath.IsAbs(target) {
+			target = filepath.Join(vars["install"], target)
+		}
 
 		for _, dir := range []string{desktopPath, startMenuPath} {
 			if isURL {
@@ -84,8 +90,21 @@ func createLNKShortcut(dir, name, target string) error {
 	shortcut := cs.ToIDispatch()
 	defer shortcut.Release()
 
-	if _, err := oleutil.PutProperty(shortcut, "TargetPath", target); err != nil {
+	// For directory targets, use explorer.exe to open the folder
+	targetPath := target
+	arguments := ""
+	if info, err := os.Stat(target); err == nil && info.IsDir() {
+		targetPath = filepath.Join(os.Getenv("SystemRoot"), "explorer.exe")
+		arguments = target
+	}
+
+	if _, err := oleutil.PutProperty(shortcut, "TargetPath", targetPath); err != nil {
 		return fmt.Errorf("set TargetPath: %w", err)
+	}
+	if arguments != "" {
+		if _, err := oleutil.PutProperty(shortcut, "Arguments", arguments); err != nil {
+			return fmt.Errorf("set Arguments: %w", err)
+		}
 	}
 	if _, err := oleutil.CallMethod(shortcut, "Save"); err != nil {
 		return fmt.Errorf("save shortcut: %w", err)
