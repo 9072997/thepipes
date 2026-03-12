@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/9072997/thepipes/internal/cleanfs"
 	"github.com/9072997/thepipes/internal/eventlog"
 	"github.com/9072997/thepipes/internal/firewall"
 	"github.com/9072997/thepipes/internal/installcfg"
@@ -22,6 +23,7 @@ import (
 // Install runs the 9-step installation sequence.
 // Status lines are written to w as each step completes.
 func Install(manifest AppManifest, vars map[string]string, w io.Writer) error {
+	manifest.PayloadFS = cleanfs.New(manifest.PayloadFS)
 	installDir := getInstallDir(manifest.Name)
 	dataDir := getDataDir(manifest.Name)
 	svcName := slug(manifest.Name)
