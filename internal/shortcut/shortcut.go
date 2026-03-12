@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/go-ole/go-ole"
@@ -20,6 +21,11 @@ const (
 // CreateAll creates Desktop and Start Menu shortcuts from the shortcuts map.
 // vars is used to expand %variable% tokens in shortcut targets.
 func CreateAll(shortcuts map[string]string, vars map[string]string) error {
+	// COM is per-OS-thread; pin this goroutine so CoInitializeEx
+	// remains valid for all subsequent COM calls.
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
 	if err := ole.CoInitializeEx(0, ole.COINIT_APARTMENTTHREADED); err != nil {
 		return fmt.Errorf("CoInitialize: %w", err)
 	}
