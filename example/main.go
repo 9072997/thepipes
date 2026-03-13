@@ -62,7 +62,7 @@ func main() {
 	})
 }
 
-func doSomething(log io.Writer, vars map[string]string) {
+func doSomething(log io.Writer, vars map[string]string) error {
 	// these get a spinner
 	fmt.Fprintln(log, "Hi")
 	time.Sleep(time.Second)
@@ -90,4 +90,5 @@ func doSomething(log io.Writer, vars map[string]string) {
 		fmt.Fprintln(log, "Example line")
 		time.Sleep(time.Second)
 	}
+	return nil
 }

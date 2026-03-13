@@ -107,12 +107,13 @@ Runs a function in the background and displays its output in a scrolling log wit
 ```go
 &pages.Process{
     PageTitle: "Preparing Database",
-    Func: func(log io.Writer, vars map[string]string) {
+    Func: func(log io.Writer, vars map[string]string) error {
         fmt.Fprintln(log, "Creating tables...")
         // ... do work ...
         fmt.Fprintln(log, "Progress: 50%")
         // ... more work ...
         fmt.Fprintln(log, "Done: 100%")
+        return nil
     },
     Reentry: false,
 }

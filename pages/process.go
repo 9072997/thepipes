@@ -23,7 +23,7 @@ var pctRe = regexp.MustCompile(`(\d+(?:\.\d+)?)%`)
 // indeterminate to determinate mode and updates to that value.
 type Process struct {
 	PageTitle string
-	Func      func(log io.Writer, vars map[string]string)
+	Func      func(log io.Writer, vars map[string]string) error
 	Reentry   bool // allow navigating back to this page after completion
 }
 
@@ -71,9 +71,10 @@ func (p *Process) Render(parent *tk.FrameWidget, vars map[string]string, nav eng
 	// Pipe: Func writes -> scanner reads.
 	pr, pw := io.Pipe()
 
-	// Work goroutine.
+	// Work goroutine: run Func and capture the error.
+	var funcErr error
 	go func() {
-		p.Func(pw, vars)
+		funcErr = p.Func(pw, vars)
 		pw.Close()
 	}()
 
@@ -105,6 +106,13 @@ func (p *Process) Render(parent *tk.FrameWidget, vars map[string]string, nav eng
 		// Func returned and pipe closed - finalize.
 		tk.PostEvent(func() {
 			prog.Stop()
+			if funcErr != nil {
+				// Leave progress bar in an error state and re-enable Back.
+				prog.Configure(tk.Mode("determinate"), tk.Value("0"))
+				pctLbl.Configure(tk.Txt(""))
+				nav.SetBack(true)
+				return
+			}
 			if !deterministic {
 				prog.Configure(tk.Mode("determinate"))
 			}

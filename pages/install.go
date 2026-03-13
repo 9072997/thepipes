@@ -12,8 +12,9 @@ import (
 func Install(manifest engine.AppManifest) engine.WizardPage {
 	return &Process{
 		PageTitle: "Installing " + manifest.Name,
-		Func: func(log io.Writer, vars map[string]string) {
+		Func: func(log io.Writer, vars map[string]string) error {
 			engine.Install(manifest, vars, log)
+			return nil
 		},
 	}
 }

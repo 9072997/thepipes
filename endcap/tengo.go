@@ -11,19 +11,27 @@ import (
 )
 
 // newProcessFunc compiles tengo source into a function suitable for Process.Func.
-func newProcessFunc(src []byte) func(io.Writer, map[string]string) {
-	return func(log io.Writer, vars map[string]string) {
+// Scripts can signal failure by setting the error variable:
+//
+//	error = "something went wrong"
+func newProcessFunc(src []byte) func(io.Writer, map[string]string) error {
+	return func(log io.Writer, vars map[string]string) error {
 		s := tengo.NewScript(src)
 		s.SetImports(stdlib.GetModuleMap(stdlib.AllModuleNames()...))
 		_ = s.Add("log", newTengoWriter(log))
 		_ = s.Add("vars", toTengoMap(vars))
+		_ = s.Add("error", "")
 
 		compiled, err := s.Run()
 		if err != nil {
-			fmt.Fprintln(log, "script error:", err)
-			return
+			return fmt.Errorf("script error: %w", err)
 		}
 		syncTengoMap(compiled, "vars", vars)
+
+		if msg := compiled.Get("error").String(); msg != "" {
+			return fmt.Errorf("%s", msg)
+		}
+		return nil
 	}
 }
 
